@@ -5,12 +5,13 @@ class Users {
         this._users = [];
     }
 
-    addUser(name) {
+    addUser(user) {
+        console.log(user)
         let id = v4();
         while (this._users.find(item => item.id === id)) {
             id = v4();
         }
-        this._users.push({name, id})
+        this._users.push({...user, id})
     }
 
     deleteUser(id) {
