@@ -6,7 +6,6 @@ class Users {
     }
 
     addUser(user) {
-        console.log(user)
         let id = v4();
         while (this._users.find(item => item.id === id)) {
             id = v4();
@@ -23,7 +22,7 @@ class Users {
     }
 
     editUser(id, payload) {
-        this._users.map(item => {
+        this._users = this._users.map(item => {
             if (item.id === id) {
                 return {...item, ...payload};
             }
