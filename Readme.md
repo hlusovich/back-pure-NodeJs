@@ -14,16 +14,16 @@ GET /person:
 Server returns all persons and status code 200;
 GET /person/{personId}:
 Server returns  person, who has this id  and status code 200;
-If personId is invalid uuid server returns   status code 400 and appropriate message;
-If person with this id isn't exist  server returns   status code 404 and appropriate message;
+If personId is invalid uuid server, returns   status code 400 and appropriate message;
+If person with this id isn't exist,  server returns   status code 404 and appropriate message;
 POST /person
 Server returns  fresh created person and status code 201;
 Server returns  status code 400, if request body doesn't  contains required fields;
 PUT /person/{personId}
 Server returns  updated  person and status code 200;
-If personId is invalid uuid server returns  status code 400 and appropriate message;
-If person with this id isn't exist  server returns   status code 404 and appropriate message;
+If personId is invalid uuid, server returns  status code 400 and appropriate message;
+If person with this id isn't exist, server returns   status code 404 and appropriate message;
 DELETE /person/{personId}
 Server returns  status code 204 and appropriate message, if person is found and deleted;
-If personId is invalid uuid server returns  status code 400 and appropriate message;
-If person with this id isn't exist  server returns   status code 404 and appropriate message;
+If personId is invalid uuid, server returns  status code 400 and appropriate message;
+If person with this id isn't exist,  server returns   status code 404 and appropriate message;
