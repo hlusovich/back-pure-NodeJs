@@ -1,4 +1,5 @@
-const {v4} = require('uuid');
+const {v4, validate} = require('uuid');
+const MyError = require('../MyError/MyError');
 
 class Users {
     constructor() {
@@ -16,7 +17,17 @@ class Users {
     }
 
     deleteUser(id) {
-        this._users = this._users.filter(item => item.id !== id);
+        if (validate(id)) {
+            const user = this._users.find(item => item.id === id);
+            if (user) {
+                this._users = this._users.filter(item => item.id !== id);
+                return true;
+            }
+            throw  new MyError("User with this id isn't exist, please check it", 404);
+        } else {
+            throw  new MyError("UUID isn't valid, please check it", 400);
+        }
+
     }
 
     getAllUsers() {
@@ -24,16 +35,36 @@ class Users {
     }
 
     editUser(id, payload) {
-        this._users = this._users.map(item => {
-            if (item.id === id) {
-                return {...item, ...payload};
+        if (validate(id)) {
+            this._users = this._users.map(item => {
+                if (item.id === id) {
+                    return {...item, ...payload};
+                }
+                return item;
+            });
+            const user = this._users.find(item => item.id === id);
+            if (user) {
+                return user;
+            } else {
+                throw  new MyError("User with this id isn't exist, please check it", 404);
             }
-            return  item;
-        });
+        } else {
+            throw  new MyError("UUID isn't valid, please check it", 400);
+        }
 
     }
-    getUser(id){
-        return this._users.find(item=> item.id === id);
+
+    getUser(id) {
+        if (validate(id)) {
+            const user = this._users.find(item => item.id === id);
+            if (user) {
+                return user;
+            }
+            throw  new MyError("User with this id isn't exist, please check it", 404);
+        } else {
+            throw  new MyError("UUID isn't valid, please check it", 400);
+        }
+
     }
 
 }

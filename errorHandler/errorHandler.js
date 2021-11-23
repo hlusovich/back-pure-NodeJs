@@ -4,8 +4,10 @@ const errorHandler = (error,res)=>{
       res.writeHead(error.status, {"Content-Type": "application/json"});
       res.end(error.message)
   }
-    res.writeHead(500, {"Content-Type": "application/json"});
-    res.end("Unknown error")
-};
+  else{
+      res.writeHead(500, {"Content-Type": "application/json"});
+      res.end("Unknown server error " + error.message);
+  }
+    };
 
 module.exports = errorHandler;

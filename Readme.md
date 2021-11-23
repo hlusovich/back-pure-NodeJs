@@ -10,6 +10,7 @@ npm run start:dev
 
 #Description:
 This app is server with all main CRUD operations.
+required field in object person is name.
 GET /person:
 Server returns all persons and status code 200;
 GET /person/{personId}:
