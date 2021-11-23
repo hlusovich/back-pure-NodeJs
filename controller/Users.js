@@ -10,7 +10,9 @@ class Users {
         while (this._users.find(item => item.id === id)) {
             id = v4();
         }
-        this._users.push({...user, id})
+        const createdUser = {...user, id};
+        this._users.push(createdUser);
+        return createdUser;
     }
 
     deleteUser(id) {
