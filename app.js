@@ -1,8 +1,9 @@
 const users = require('./controller/Users');
 const {Buffer} = require('buffer');
 const errorHandler = require('./errorHandler/errorHandler');
-const MyError =require('./MyError/MyError');
+const MyError = require('./MyError/MyError');
 const runApp = (req, res) => {
+
     try {
         const path = req.url.split("/").filter(item => !!item);
         if (path[0] === "person" && path.length === 1) {
@@ -19,14 +20,20 @@ const runApp = (req, res) => {
                     });
                     req.on('end', () => {
                         try {
-                            const params = body.toString().split("=").map(item=> item.split("&")).flat(1);
-                            let nameIndex = params.findIndex(item => item === "name");
-                            if(~nameIndex === 0){
-                                throw new MyError("Field name is required", 400);
+                            try {
+                                const person = JSON.parse(body.toString());
+                                res.end(JSON.stringify(users.addUser(person)));
+                            } catch (e) {
+                                console.log(e.message + "!!!!!!!!!")
+                                const params = body.toString().split("=").map(item => item.split("&")).flat(1);
+                                let nameIndex = params.findIndex(item => item === "name");
+                                if (~nameIndex === 0) {
+                                    throw new MyError("Field name is required", 400);
+                                }
+                                const fieldName = params[nameIndex].split("&");
+                                const user = {[fieldName[fieldName.length - 1]]: params[nameIndex + 1].split('&')[0]};
+                                res.end(JSON.stringify(users.addUser(user)));
                             }
-                            const fieldName = params[nameIndex].split("&");
-                            const user = {[fieldName[fieldName.length - 1]]: params[nameIndex + 1].split('&')[0]};
-                            res.end(JSON.stringify(users.addUser(user)));
                         } catch (e) {
                             errorHandler(e, res);
                         }
@@ -53,10 +60,11 @@ const runApp = (req, res) => {
                     });
                     break;
                 case "DELETE":
-                    if(users.deleteUser(path[1])){
+                    if (users.deleteUser(path[1])) {
                         res.writeHead(204, {"Content-Type": "application/text"});
                         res.end(`Person  was deleted`);
-                    };
+                    }
+                    ;
                     break;
             }
 
