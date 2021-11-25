@@ -6,14 +6,16 @@ const path = `http://localhost:${process.env.PORT}/person`;
 const myAxios = new MyAxios(path, process.env.PORT);
 const freshPeron = {name: "KIVI"};
 const moreFreshPeron = {name: "KIVI2"};
+let server = null;
 let id = '';
 jest.setTimeout(20000)
 describe("Server tests", () => {
-    beforeAll(async () => {
-       await runApp();
-    });
+    beforeAll(
+        async () => {
+            server = await runApp();
+        });
     afterAll(() => {
-
+        server.close();
     });
     test("method GET should return empty array", async () => {
         try {
@@ -56,7 +58,6 @@ describe("Server tests", () => {
     });
     test("method GET to person/{id} should return second person", async () => {
         try {
-
             const result = await myAxios.get(id);
             expect(result.name).toBe(moreFreshPeron.name);
             expect(result.id).toBe(id);

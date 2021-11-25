@@ -9,7 +9,7 @@ const start = () => {
             server = http.createServer(runApp);
             server.listen(PORT, () => {
                 console.log(`Server is running ${PORT}`);
-                res(`Server is running ${PORT}`);
+                res(server);
             });
         }
         catch(e){
