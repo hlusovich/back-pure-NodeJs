@@ -1,72 +1,92 @@
-const {expect,describe, beforeAll, afterAll} = require("@jest/globals");
-const child_process = require("child_process");
-let subscription = null;
+const {expect, describe, beforeAll, afterAll} = require("@jest/globals");
+const runApp = require('./index');
 require('dotenv').config();
 const MyAxios = require('./myAxios/MyAxios');
-const path = `http://localhost:${3068}/person`;
-const myAxios = new MyAxios(path);
-const freshPeron = {name:"KIVI"};
-const moreFreshPeron = {name:"KIVI2"};
-let id ='';
+const path = `http://localhost:${process.env.PORT}/person`;
+const myAxios = new MyAxios(path, process.env.PORT);
+const freshPeron = {name: "KIVI"};
+const moreFreshPeron = {name: "KIVI2"};
+let id = '';
+jest.setTimeout(20000)
+describe("Server tests", () => {
+    beforeAll(async () => {
+       await runApp();
+    });
+    afterAll(() => {
 
-describe( "Server tests", ()=>{
-    beforeAll( async ()=>{
-      // subscription =  await child_process.fork("./index.js");
     });
-    afterAll(()=>{
-        // process.kill(subscription.pid);
-    });
-    test("method GET should return empty array", async ()=>{
-        try{
+    test("method GET should return empty array", async () => {
+        try {
             const result = await myAxios.get();
             expect(result).toEqual([]);
             expect(result.length).toBe(0);
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
         }
 
     });
-    test("method POST should return fresh created object", async ()=>{
-        try{
+    test("method POST should return fresh created object", async () => {
+        try {
             const result = await myAxios.post(freshPeron);
             expect(result.name).toBe(freshPeron.name);
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
         }
 
     });
-    test("method POST should return more fresh created object", async ()=>{
-        try{
+    test("method POST should return more fresh created object", async () => {
+        try {
             const result = await myAxios.post(moreFreshPeron);
             id = result.id;
             expect(result.name).toBe(moreFreshPeron.name);
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
         }
 
     });
-    test("method GET should return 2 persons", async ()=>{
-        try{
+    test("method GET should return 2 persons", async () => {
+        try {
 
             const result = await myAxios.get();
             expect(result.length).toBe(2);
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
         }
 
     });
-    test("method GET should return second person", async ()=>{
-        try{
+    test("method GET to person/{id} should return second person", async () => {
+        try {
 
             const result = await myAxios.get(id);
             expect(result.name).toBe(moreFreshPeron.name);
             expect(result.id).toBe(id);
+        } catch (e) {
+            console.log(e)
         }
-        catch (e) {
+
+    });
+    test("method PUT should return changed object but with old id", async () => {
+        const editInfo = {name: "newUSer"};
+        const result = await myAxios.put(editInfo, id);
+        expect(result.id).toBe(id);
+        expect(result.name).toBe(editInfo.name);
+    });
+    test("method GET should return all persons", async () => {
+        try {
+
+            const result = await myAxios.get();
+            expect(result.length).toBe(2);
+        } catch (e) {
+            console.log(e)
+        }
+
+    });
+    test("method DELETE should delete person by id", async () => {
+        try {
+            myAxios.delete(id);
+            const result = await myAxios.get();
+            expect(result.length).toBe(1);
+        } catch (e) {
             console.log(e)
         }
 

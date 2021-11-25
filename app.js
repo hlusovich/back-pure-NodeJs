@@ -20,11 +20,11 @@ const runApp = (req, res) => {
                     });
                     req.on('end', () => {
                         try {
+                            console.log(req.params)
                             try {
                                 const person = JSON.parse(body.toString());
                                 res.end(JSON.stringify(users.addUser(person)));
                             } catch (e) {
-                                console.log(e.message + "!!!!!!!!!")
                                 const params = body.toString().split("=").map(item => item.split("&")).flat(1);
                                 let nameIndex = params.findIndex(item => item === "name");
                                 if (~nameIndex === 0) {
@@ -48,13 +48,19 @@ const runApp = (req, res) => {
                     res.end(user);
                     break;
                 case "PUT":
+
                     const body = [];
                     res.writeHead(200, {"Content-Type": "application/json"});
                     req.on('data', (data) => {
                         body.push(Buffer.from(data));
                     });
                     req.on('end', () => {
-                        const user = {name: body.toString().split("=")[1]};
+                        let user = null;
+                        try {
+                            user = JSON.parse(body);
+                        } catch (e) {
+                            user = {name: body.toString().split("=")[1]};
+                        }
                         res.writeHead(200, {"Content-Type": "application/json"});
                         res.end(JSON.stringify(users.editUser(path[1], user)));
                     });
@@ -64,7 +70,6 @@ const runApp = (req, res) => {
                         res.writeHead(204, {"Content-Type": "application/text"});
                         res.end(`Person  was deleted`);
                     }
-                    ;
                     break;
             }
 
