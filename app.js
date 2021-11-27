@@ -2,8 +2,8 @@ const users = require('./controller/Users');
 const {Buffer} = require('buffer');
 const errorHandler = require('./errorHandler/errorHandler');
 const MyError = require('./MyError/MyError');
+const personFieldsValidator = require('./validators/personFieldsValidator');
 const runApp = (req, res) => {
-
     try {
         const path = req.url.split("/").filter(item => !!item);
         if (path[0] === "person" && path.length === 1) {
@@ -22,9 +22,7 @@ const runApp = (req, res) => {
                         try {
                             try {
                                 const person = JSON.parse(body.toString());
-                                if (!person.hasOwnProperty("name") || !person.hasOwnProperty("age") || !person.hasOwnProperty("hobbies")) {
-                                    throw new MyError("Fields name,age,hobbies are required", 400);
-                                }
+                                personFieldsValidator(person)
                                 res.end(JSON.stringify(users.addUser(person)));
                             } catch (e) {
                                 const person = {};
@@ -32,9 +30,6 @@ const runApp = (req, res) => {
                                     const processedItem = item.split("=");
                                     person[processedItem[0]] = processedItem[1];
                                 });
-                                if (!person.hasOwnProperty("name") || !person.hasOwnProperty("age") || !person.hasOwnProperty("hobbies")) {
-                                    throw new MyError("Fields name,age,hobbies are required", 400);
-                                }
                                 res.end(JSON.stringify(users.addUser(person)));
 
                             }
