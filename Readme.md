@@ -2,10 +2,10 @@
 First of all  you need to do npm install.
 # Run:
 If you want to run application in development mode use command : start:dev ( nodemon runApp.js ) npm run start:dev
-If you want to run application in production mode use command : start:prod   npm run start:prod
+If you want to run application in production mode use command : start:prod   npm run start:prod (webpack && node bundle.js)
 If you want to run tests  use command : "npm run test": "jest test"  
 
-# Example
+# Example:
 npm run start:prod
 npm run start:dev
 

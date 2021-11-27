@@ -8,10 +8,10 @@ function personFieldsValidator(person) {
         throw new MyError("Field age is required and must be number", 400);
     }
     if (!person.hasOwnProperty("hobbies") ||  !Array.isArray(person.hobbies)) {
-        throw new MyError("Field hobbies is required and must array of strings", 400);
+        throw new MyError("Field hobbies is required and must be  array of strings", 400);
     }
     if (person.hobbies.length && !person.hobbies.every(item => typeof item === "string")) {
-        throw new MyError("Field hobbies is required and must array of strings", 400);
+        throw new MyError("Field hobbies is required and must be array of strings", 400);
     }
 }
 

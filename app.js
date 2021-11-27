@@ -1,7 +1,6 @@
 const users = require('./controller/Users');
 const {Buffer} = require('buffer');
 const errorHandler = require('./errorHandler/errorHandler');
-const MyError = require('./MyError/MyError');
 const personFieldsValidator = require('./validators/personFieldsValidator');
 const runApp = (req, res) => {
     try {
@@ -44,8 +43,7 @@ const runApp = (req, res) => {
                     });
                     req.on('end', () => {
                         try {
-                            let person = null;
-                            person = JSON.parse(body.toString());
+                            let person = JSON.parse(body.toString());
                             person = users.editUser(path[1], person);
                             res.writeHead(200, {"Content-Type": "application/json"});
                             res.end(JSON.stringify(person));
