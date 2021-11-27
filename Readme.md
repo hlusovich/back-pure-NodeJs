@@ -5,11 +5,11 @@ If you want to run application in development mode use command : start:dev ( nod
 If you want to run application in production mode use command : start:prod   npm run start:prod
 If you want to run tests  use command : "npm run test": "jest test"  
 
-#Example
+# Example
 npm run start:prod
 npm run start:dev
 
-#Description:
+# Description:
 This app is server with all main CRUD operations.
 required fields in object person are name which must be string,  age which must be number, hobbies which must be  array of strings or empty array.
 GET /person:
