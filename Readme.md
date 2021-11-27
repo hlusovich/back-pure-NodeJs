@@ -1,8 +1,9 @@
 # Node.JS Q4 2021 Task 3
 First of all  you need to do npm install.
 # Run:
-If you want to run application in development mode use command : start:dev ( nodemon index.js ) npm run start:dev
+If you want to run application in development mode use command : start:dev ( nodemon runApp.js ) npm run start:dev
 If you want to run application in production mode use command : start:prod   npm run start:prod
+If you want to run tests  use command : "npm run test": "jest test"  
 
 #Example
 npm run start:prod
@@ -10,7 +11,7 @@ npm run start:dev
 
 #Description:
 This app is server with all main CRUD operations.
-required field in object person is name.
+required fields in object person are name which must be string,  age which must be number, hobbies which must be  array of strings or empty array.
 GET /person:
 Server returns all persons and status code 200;
 GET /person/{personId}:
