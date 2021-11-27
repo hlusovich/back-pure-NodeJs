@@ -20,19 +20,23 @@ const runApp = (req, res) => {
                     });
                     req.on('end', () => {
                         try {
-                            console.log(req.params)
                             try {
                                 const person = JSON.parse(body.toString());
+                                if (!person.hasOwnProperty("name") || !person.hasOwnProperty("age") || !person.hasOwnProperty("hobbies")) {
+                                    throw new MyError("Fields name,age,hobbies are required", 400);
+                                }
                                 res.end(JSON.stringify(users.addUser(person)));
                             } catch (e) {
-                                const params = body.toString().split("=").map(item => item.split("&")).flat(1);
-                                let nameIndex = params.findIndex(item => item === "name");
-                                if (~nameIndex === 0) {
-                                    throw new MyError("Field name is required", 400);
+                                const person = {};
+                                body.toString().split("&").map(item => {
+                                    const processedItem = item.split("=");
+                                    person[processedItem[0]] = processedItem[1];
+                                });
+                                if (!person.hasOwnProperty("name") || !person.hasOwnProperty("age") || !person.hasOwnProperty("hobbies")) {
+                                    throw new MyError("Fields name,age,hobbies are required", 400);
                                 }
-                                const fieldName = params[nameIndex].split("&");
-                                const user = {[fieldName[fieldName.length - 1]]: params[nameIndex + 1].split('&')[0]};
-                                res.end(JSON.stringify(users.addUser(user)));
+                                res.end(JSON.stringify(users.addUser(person)));
+
                             }
                         } catch (e) {
                             errorHandler(e, res);
@@ -48,21 +52,30 @@ const runApp = (req, res) => {
                     res.end(user);
                     break;
                 case "PUT":
-
                     const body = [];
                     res.writeHead(200, {"Content-Type": "application/json"});
                     req.on('data', (data) => {
                         body.push(Buffer.from(data));
                     });
                     req.on('end', () => {
-                        let user = null;
                         try {
-                            user = JSON.parse(body);
+                            let person = null;
+                            try {
+                                person = JSON.parse(body);
+                            } catch (e) {
+                                person = {};
+                                body.toString().split("&").map(item => {
+                                    const processedItem = item.split("=");
+                                    person[processedItem[0]] = processedItem[1];
+                                });
+                            }
+                            person = users.editUser(path[1], person);
+                            res.writeHead(200, {"Content-Type": "application/json"});
+                            res.end(JSON.stringify(person));
                         } catch (e) {
-                            user = {name: body.toString().split("=")[1]};
+                            errorHandler(e, res);
+
                         }
-                        res.writeHead(200, {"Content-Type": "application/json"});
-                        res.end(JSON.stringify(users.editUser(path[1], user)));
                     });
                     break;
                 case "DELETE":
@@ -72,7 +85,6 @@ const runApp = (req, res) => {
                     }
                     break;
             }
-
         } else {
             res.writeHead(404, {"Content-Type": "application/json"});
             res.end("This path isn't exist 404");

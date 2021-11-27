@@ -4,11 +4,11 @@ require('dotenv').config();
 const MyAxios = require('./myAxios/MyAxios');
 const path = `http://localhost:${process.env.PORT}/person`;
 const myAxios = new MyAxios(path, process.env.PORT);
-const freshPeron = {name: "KIVI"};
-const moreFreshPeron = {name: "KIVI2"};
+const freshPeron = {name: "KIVI", age:23, hobbies: ["play tennis"]};
+const moreFreshPeron = {name: "KIVI2", age:56, hobbies: ["play football"]};
 let server = null;
 let id = '';
-jest.setTimeout(20000)
+jest.setTimeout(20000);
 describe("Server tests", () => {
     beforeAll(
         async () => {
@@ -67,14 +67,14 @@ describe("Server tests", () => {
 
     });
     test("method PUT should return changed object but with old id", async () => {
-        const editInfo = {name: "newUSer"};
+        const editInfo = {name: "newUSer", age:70};
         const result = await myAxios.put(editInfo, id);
         expect(result.id).toBe(id);
         expect(result.name).toBe(editInfo.name);
+        expect(result.age).toBe(editInfo.age);
     });
     test("method GET should return all persons", async () => {
         try {
-
             const result = await myAxios.get();
             expect(result.length).toBe(2);
         } catch (e) {
