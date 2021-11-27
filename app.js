@@ -55,7 +55,7 @@ const runApp = (req, res) => {
                 case "DELETE":
                     if (users.deleteUser(path[1])) {
                         res.writeHead(204, {"Content-Type": "application/text"});
-                        res.end(`Person  was deleted`);
+                        res.end(`Person was deleted`);
                     }
                     break;
             }
