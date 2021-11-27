@@ -20,19 +20,9 @@ const runApp = (req, res) => {
                     });
                     req.on('end', () => {
                         try {
-                            try {
-                                const person = JSON.parse(body.toString());
-                                personFieldsValidator(person)
-                                res.end(JSON.stringify(users.addUser(person)));
-                            } catch (e) {
-                                const person = {};
-                                body.toString().split("&").map(item => {
-                                    const processedItem = item.split("=");
-                                    person[processedItem[0]] = processedItem[1];
-                                });
-                                res.end(JSON.stringify(users.addUser(person)));
-
-                            }
+                            const person = JSON.parse(body.toString());
+                            personFieldsValidator(person);
+                            res.end(JSON.stringify(users.addUser(person)));
                         } catch (e) {
                             errorHandler(e, res);
                         }
@@ -55,21 +45,12 @@ const runApp = (req, res) => {
                     req.on('end', () => {
                         try {
                             let person = null;
-                            try {
-                                person = JSON.parse(body);
-                            } catch (e) {
-                                person = {};
-                                body.toString().split("&").map(item => {
-                                    const processedItem = item.split("=");
-                                    person[processedItem[0]] = processedItem[1];
-                                });
-                            }
+                            person = JSON.parse(body.toString());
                             person = users.editUser(path[1], person);
                             res.writeHead(200, {"Content-Type": "application/json"});
                             res.end(JSON.stringify(person));
                         } catch (e) {
                             errorHandler(e, res);
-
                         }
                     });
                     break;
