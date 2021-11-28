@@ -1,7 +1,22 @@
 const http = require('http');
-const server = http.createServer((req,res)=>{
+require('dotenv').config();
+const PORT = process.env.PORT || 3005;
+const runApp = require('./app.js');
+let server = null;
+const start = () => {
+    return new Promise((res, rej) => {
+        try{
+            server = http.createServer(runApp);
+            server.listen(PORT, () => {
+                console.log(`Server is running ${PORT}`);
+                res(server);
+            });
+        }
+        catch(e){
+            rej(e.message);
+        }
 
-});
-server.listen(3000, ()=>{
-   console.log(`Server is runing`)
-});
+    });
+
+};
+module.exports = start;
