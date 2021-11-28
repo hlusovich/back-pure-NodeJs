@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest test",
     "start:dev": "SET NODE_ENV='development' && nodemon runApp.js",
-    "start:prod": "SET NODE_ENV='development' && webpack && node ./dist/bundle.js"
+    "start:prod": "SET NODE_ENV='production' && webpack && node ./dist/bundle.js"
   },
   "author": "",
   "license": "ISC",
